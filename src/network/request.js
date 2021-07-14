@@ -8,8 +8,10 @@ export function request(config) {
   })
 
   // 2.axios的拦截器
-  // 2.1.请求拦截的作用
+  // 2.1.请求拦截的作用  (这里可以验证登陆的token)
   instance.interceptors.request.use(config => {
+    // 给请求头加添加Authorization，这样有权限的api就可以正常调用了
+    config.headers.Authorization = window.sessionStorage.getItem('token')
     return config
   }, err => {
     // console.log(err);
