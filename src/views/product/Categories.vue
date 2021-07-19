@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import {getCategoryList, addCategory, getCateById, editCategory} from 'network/productlist'
+import {getCategoryList, addCategory, getCateById, editCategory, deleteCategory} from 'network/productlist'
 export default {
     name: 'Categories',
     data() {
@@ -224,17 +224,35 @@ export default {
             })
             this.editCateDialogVisible = true
         },
-        //删除
+        //删除分类
         cateDeleteDialog(id) {
             console.log(id)
-
+             this.$confirm('此操作将永久删除该分类, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+                }).then(() => {
+                    deleteCategory(id).then(res => {
+                        console.log(res)
+                        if(res.meta.status !== 200) return this.$message.error('删除失败')
+                        this.$message.success('删除成功')
+                        this.getCategory()
+                    })
+                }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+                });
 
         },
         //  发起网络修改分类请求
         editCatedialog() {
-            console.log(this.editCateForm)
-            editCategory(this.editCateForm.cat_pid, this.editCateForm.cat_name).then(res => {
-                console.log(res)
+            console.log(this.editCateForm.cat_id, this.editCateForm.cat_name)
+            editCategory(this.editCateForm.cat_id, this.editCateForm.cat_name).then(res => {
+                if(res.meta.status !== 200) return this.$message.error('更新失败')
+                this.$message.success('更新成功')
+                this.getCategory()
             })
             this.editCateDialogVisible = false
         }

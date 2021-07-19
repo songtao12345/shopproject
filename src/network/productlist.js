@@ -48,3 +48,14 @@ export function editCategory(id, cat_name) {
         }
     })
 }
+
+// 删除分类
+export function deleteCategory(id) {
+    return request({
+        method: 'delete',
+        url: `categories/${id}`,
+        params: {
+            id
+        }
+    })
+}
