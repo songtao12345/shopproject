@@ -60,7 +60,7 @@ export default {
     created() {
         getMenus().then(res => {
             this.menusList = res.data
-            console.log(res.data)
+            // console.log(res.data)
         })
     },
     methods: {
