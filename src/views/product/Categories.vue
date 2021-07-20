@@ -103,9 +103,9 @@ export default {
             casValue: [],
             editCateForm: {},
             casProps: {
-                value: 'cat_id',
-                label: 'cat_name',
-                children: 'children',
+                value: 'cat_id',   // 选中的值
+                label: 'cat_name',   // 看到的值
+                children: 'children',   // 实现父子节点的嵌套
                 checkStrictly: true
             },
             addCategory: {
