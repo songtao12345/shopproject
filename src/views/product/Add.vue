@@ -237,9 +237,6 @@ export default {
                 console.log(this.addForm)
 
                 //校验成功,发起请求
-                // console.log(this.addForm.goods_name,this.categoryList,this.addForm.goods_price,
-                // this.addForm.goods_number,this.addForm.goods_weight,this.addForm.goods_introduce,
-                // this.addForm.pics)  
 
                 addGoods(this.addForm.goods_name,goods_cat,this.addForm.goods_price,
                 this.addForm.goods_number,this.addForm.goods_weight,this.addForm.goods_introduce,

@@ -102,3 +102,33 @@ export function addGoods(goods_name,goods_cat,goods_price,goods_number,goods_wei
         }
     })
 }
+
+// 根据ID获取商品信息
+export function getGoodInfoById(id) {
+    return request({
+        method: 'get',
+        url: `goods/${id}`,
+        params: {
+            id
+        }
+    })
+}
+
+// 编辑提交商品
+export function editSubmitGoods(id,goods_name,goods_cat,goods_price,goods_number,goods_weight) {
+    return request({
+        method: 'put',
+        url: `goods/${id}`,
+        data: {
+            'id': id,
+            'goods_name':goods_name,
+            'goods_cat': goods_cat,
+            'goods_price': goods_price,
+            'goods_number': goods_number,
+            'goods_weight': goods_weight
+            // 'goods_introduce': goods_introduce,
+            // 'pics': pics,
+            // 'attrs': attrs
+        }
+    })
+}

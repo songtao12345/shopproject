@@ -31,7 +31,7 @@
                    </el-table-column>
                    <el-table-column  label="操作" width="130px">
                        <template slot-scope="scope">
-                            <el-button type="primary" icon="el-icon-edit" size="mini" @click="goodsEditDialog(scope.row.id)"></el-button>
+                            <el-button type="primary" icon="el-icon-edit" size="mini" @click="goodsEditDialog(scope.row)"></el-button>
                             <el-button type="danger" icon="el-icon-delete" size="mini" @click="goodsDeleteDialog(scope.row)"></el-button>
                        </template>
                    </el-table-column>
@@ -42,6 +42,26 @@
                 :page-sizes="[1, 2, 5, 10]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
                 </el-pagination>
 
+                <!-- 编辑对话框 -->
+                <el-dialog  title="修改商品信息"  :visible.sync="editGoodsdialogVisible" width="50%">
+                <!-- 表单区域 -->
+                <el-form :model="editForm" :rules="editRules" ref="editRuleForm" label-width="100px">
+                    <el-form-item label="商品名称" prop="goods_name">
+                        <el-input v-model="editForm.goods_name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商品价格" prop="goods_price">
+                        <el-input v-model="editForm.goods_price"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商品重量" prop="goods_weight">
+                        <el-input v-model="editForm.goods_weight"></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="editGoodsdialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="editSubmit">确 定</el-button>
+                </span>
+                </el-dialog>
+
 
         </el-card>
 
@@ -51,7 +71,8 @@
 </template>
 
 <script>
-import {getGoodsList, deleteGoods} from 'network/productlist'
+import _ from 'lodash'
+import {getGoodsList, deleteGoods, getGoodInfoById, editSubmitGoods} from 'network/productlist'
 export default {
     name: 'Goods',
     data() {
@@ -61,7 +82,21 @@ export default {
             pagesize: 5,
             total: 0,
             goodsList: [],
-            goodsDialogVisible: false
+            // cscValue: [],
+            editForm: {},
+            goodsDialogVisible: false,
+            editGoodsdialogVisible: false,
+            editRules:{
+                goods_name: [
+                    { required: false, message: '请输入商品名称', trigger: 'blur' }
+                ],
+                goods_price: [
+                    { required: false, message: '请输入商品价格', trigger: 'blur' }
+                ],
+                goods_weight: [
+                     { required: false, message: '请输入商品重量', trigger: 'blur' }
+                ]
+            }
         }
     },
     methods: {
@@ -74,8 +109,16 @@ export default {
             })
         },
          // 编辑
-         goodsEditDialog(id) {
-             console.log(id)
+         goodsEditDialog(row) {
+             console.log(row.goods_id)
+             // 根据id获取商品信息
+            getGoodInfoById(row.goods_id).then(res => {
+                if(res.meta.status !== 200) return this.$message.error('获取商品信息失败')
+                this.editForm = res.data
+                console.log(this.editForm)
+            })
+
+            this.editGoodsdialogVisible = true
          },
          //删除
          goodsDeleteDialog(row) {
@@ -111,6 +154,33 @@ export default {
          //添加商品
          goAddGoods() {
              this.$router.push('/goods/add')
+         },
+
+         // 编辑提交
+         editSubmit() {
+             this.$refs.editRuleForm.validate(valid => {
+                 if(!valid) return
+                 // 发起网络请求
+
+               let cscValue = [this.editForm.cat_one_id,this.editForm.cat_two_id,this.editForm.cat_three_id]
+                    console.log(cscValue)
+                  // 利用深拷贝将数组变成字符串
+                let goods_cat = _.cloneDeep(cscValue)
+                goods_cat = goods_cat.join(',')
+                console.log(goods_cat)
+
+                 editSubmitGoods(this.editForm.goods_id,this.editForm.goods_name,goods_cat,this.editForm.goods_price,
+                 this.editForm.goods_number,this.editForm.goods_weight).then(res => {
+                     console.log(res)
+                     if(res.meta.status !== 200) return this.$message.error('修改数据失败')
+                     this.$message.success('修改数据成功')
+                     this.getGoods()
+                 })
+                
+             })
+            
+          // 关闭对话框
+          this.editGoodsdialogVisible = false
          }
          
         
