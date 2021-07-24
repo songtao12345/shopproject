@@ -23,7 +23,7 @@
                             <span>{{item.authName}}</span>
                             </template>  
                             <!-- 二级菜单 -->
-                            <el-menu-item :index="subItem.path + ''" v-for="(subItem,index) in item.children" :key="index">
+                            <el-menu-item :index="'/'+subItem.path" v-for="(subItem,index) in item.children" :key="index">
                                 <template slot="title">
                                 <i class="el-icon-menu"></i>
                                 <span>{{subItem.authName}}</span>
