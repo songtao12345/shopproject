@@ -169,6 +169,7 @@ export default {
                 goods_cat = goods_cat.join(',')
                 console.log(goods_cat)
 
+
                  editSubmitGoods(this.editForm.goods_id,this.editForm.goods_name,goods_cat,this.editForm.goods_price,
                  this.editForm.goods_number,this.editForm.goods_weight).then(res => {
                      console.log(res)
